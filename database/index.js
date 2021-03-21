@@ -19,27 +19,26 @@ const connection = new pg.Pool(dbConfig);
 
 const getQuestions = (id) => {
   const command = `
-    SELECT product_id,
-
+    SELECT product_id::varchar(10),
       coalesce((
         SELECT json_agg(row_to_json(result)) FROM
         (
           SELECT question_id, question_body, question_date, asker_name, helpful AS question_helpfulness, reported,
-            (SELECT json_object_agg(a.id,
+            coalesce((SELECT json_object_agg(a.id,
               (SELECT row_to_json(aJson) FROM
               (SELECT id, body, date, answerer_name, helpfulness,
-                coalesce((SELECT json_agg(row_to_json(photo)) FROM
-            (
-              SELECT ap.id, ap.url FROM answers_photos ap WHERE ap.answer_id = a.id
-            ) photo
-          ), '[]'
-          ) AS Photos FROM answers WHERE id=a.id)aJson)) FROM answers a, questions q2 WHERE a.question_id=q2.question_id AND q2.question_id=q.question_id AND a.reported = FALSE)
+                coalesce((
+                  SELECT json_agg(ap.url) FROM answers_photos ap WHERE ap.answer_id = a.id
+                ),'[]')
+              AS Photos FROM answers WHERE id=a.id)aJson)) FROM answers a WHERE a.question_id=q.question_id AND a.reported = FALSE),'{}')
+
            AS answers FROM questions q WHERE product_id = ($1) AND q.reported = FALSE
         ) result
       ), '[]'
-      ) AS results FROM questions WHERE product_id = ($1);`;
+      ) AS results FROM questions WHERE product_id = ($1)`;
   return connection.query(command, [id]);
 };
+
 
 const getAnswers = (id) => {
   const command = `

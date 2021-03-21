@@ -7,7 +7,7 @@ const db = require('../database');
 
 const PORT = 3000;
 
-//app.use(express.static(__dirname + '/../client/dist'));
+//app.use(express.static('/Users/mingwen/work/catwalk/public'));
 app.use(express.json());
 
 // get question list
@@ -51,30 +51,21 @@ app.put('/api/helpfulAnswer/:answerId', (req, res) => {
 });
 
 // mark question helpful
-app.put(`/api/helpfulQuestion/:questId`, (req, res) => {
+app.put('/api/helpfulQuestion/:questId', (req, res) => {
   const { questId } = req.params;
   db.putQuestionHelpful(questId)
     .then(() => res.sendStatus(204))
     .catch(() => res.sendStatus(500));
 });
-// add an answer
-// axios.post(`/api/qa/questions/${id}/answers`, {
-//   params: {
-//     body: answerEsc,
-//     name: nameEsc,
-//     email: emailEsc,
-//     photos: [],
-//   },
-// })
 
+// add an answer
 app.post('/api/qa/questions/:questId/answers', (req, res) => {
   const { questId } = req.params;
-  const { body, name, email, photos} = req.body.params;
+  const { body, name, email, photos } = req.body.params;
   db.postAnswer(questId, body, name, email, photos)
     .then(() => res.send(201))
     .catch(() => res.sendStatus(500));
 });
-
 
 // add a question
 app.post('/api/addQuestion', (req, res) => {
