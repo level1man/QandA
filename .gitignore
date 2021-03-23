@@ -105,3 +105,4 @@ dist
 
 # AWS key
 SDC-QandA.pem
+SDC-server.pem
