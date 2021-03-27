@@ -5,16 +5,17 @@ let app = express();
 
 const db = require('../database');
 
-const PORT = 3000;
+const PORT = 3003;
 
 //app.use(express.static('/Users/mingwen/work/catwalk/public'));
+//app.use(express.static('./public'));
 app.use(express.json());
 
 // get question list
 app.get('/api/qa/questions/:productId', (req, res) => {
   const { productId } = req.params;
   db.getQuestions(productId)
-    .then((results) => res.send(results.rows[0]))
+    .then((results) => (res.send(results.rows[0])))
     .catch(() => res.sendStatus(500));
 });
 
@@ -22,7 +23,7 @@ app.get('/api/qa/questions/:productId', (req, res) => {
 app.get('/api/moreAnswers/:questId', (req, res) => {
   const { questId } = req.params;
   db.getAnswers(questId)
-    .then((results) => res.send(results.rows[0]))
+    .then((results) => (res.send(results.rows[0])))
     .catch(() => res.sendStatus(500));
 });
 

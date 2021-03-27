@@ -106,3 +106,6 @@ dist
 # AWS key
 SDC-QandA.pem
 SDC-server.pem
+qandasdc.sql
+/public
+dbconfig.js

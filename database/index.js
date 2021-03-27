@@ -1,13 +1,21 @@
 const pg = require('pg');
+import dbConfig from '../dbconfig.js';
 
-const dbConfig = {
-  host: 'localhost',
-  user: 'mingwen',
-  password: '',
-  database: 'qandasdc'
-};
+// const dbConfig = {
+//   host: 'localhost',
+//   user: '',
+//   password: '',
+//   database: 'qandasdc'
+// };
+
+
+
+
+// const connection = new pg.Client(dbConfig);
+// connection.connect();
 
 const connection = new pg.Pool(dbConfig);
+
 
 // connection.connect(err => {
 //   if(err){
@@ -42,7 +50,7 @@ const getQuestions = (id) => {
 
 const getAnswers = (id) => {
   const command = `
-    SELECT question_id,
+    SELECT question_id::varchar(10),
       coalesce((
         SELECT json_agg(row_to_json(result)) FROM
         (
